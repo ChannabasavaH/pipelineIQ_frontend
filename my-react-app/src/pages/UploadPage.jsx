@@ -5,7 +5,7 @@ import axios from "axios";
 export default function UploadPage() {
   const [yaml, setYaml] = useState("");
   const [activeTab, setActiveTab] = useState("paste");
-  const [fileName, setFileName] = useState(""); 
+  const [fileName, setFileName] = useState("");
   const navigate = useNavigate();
 
   const handleFileUpload = (e) => {
@@ -17,7 +17,7 @@ export default function UploadPage() {
       return;
     }
 
-    setFileName(file.name); 
+    setFileName(file.name);
 
     const reader = new FileReader();
     reader.onload = (e) => setYaml(e.target.result);
@@ -31,23 +31,20 @@ export default function UploadPage() {
     try {
       const res = await axios.post("http://localhost:8080/api/parse", {
         yamlContent: yaml,
-        withCredentials: true 
-      }); 
-      
-      console.log(res?.data)
-      navigate("/dashboard", { state: res.data });
+        withCredentials: true,
+      });
 
+      console.log(res?.data);
+      navigate("/dashboard", { state: res.data });
     } catch {
       // fallback demo mode
       navigate("/dashboard", {
         state: {
-          estimated_time: res?.data?.estimatedTime,
+          estimatedTime: 0,
           execution: "sequential",
-          total_jobs: res?.data?.parsed.length,
-          jobs: res?.data?.parsed,
-          issues: ["Dependency chain detected"],
-          suggestions: res?.data?.suggestions,
-          ai_suggestions: ["Reduce dependencies"],
+          parsed: { jobs: {} },
+          suggestions: [],
+          ai_suggestions: [],
         },
       });
     }
@@ -55,7 +52,6 @@ export default function UploadPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 text-white">
-
       {/* TITLE */}
       <h1 className="text-5xl md:text-6xl font-bold text-center leading-tight">
         Analyze your <br />
@@ -67,10 +63,11 @@ export default function UploadPage() {
       </p>
 
       {/* MAIN CARD */}
-      <div className="mt-10 w-full max-w-2xl 
+      <div
+        className="mt-10 w-full max-w-2xl 
         bg-white/5 backdrop-blur-lg border border-white/10 
-        rounded-2xl p-6 shadow-xl">
-
+        rounded-2xl p-6 shadow-xl"
+      >
         {/* TABS */}
         <div className="flex mb-5">
           <button
@@ -109,7 +106,6 @@ export default function UploadPage() {
           />
         ) : (
           <label className="flex flex-col items-center justify-center h-44 border border-dashed border-white/20 rounded-xl cursor-pointer hover:border-blue-400 transition">
-
             {fileName ? (
               <>
                 <div className="text-green-400 text-2xl">✔</div>
@@ -136,7 +132,6 @@ export default function UploadPage() {
 
         {/* BUTTONS */}
         <div className="flex justify-between items-center mt-6">
-
           <button
             onClick={() =>
               setYaml(`jobs:
