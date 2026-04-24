@@ -12,10 +12,15 @@ export default function SummaryCards({ data }) {
 }
 
 function Card({ title, value }) {
+  const displayValue =
+    typeof value === "object" && value !== null
+      ? value.details || JSON.stringify(value)
+      : value;
+
   return (
     <div className="p-4 bg-white/5 border border-white/10 rounded-xl text-center">
       <p className="text-gray-400 text-sm">{title}</p>
-      <h2 className="text-xl font-bold">{value}</h2>
+      <h2 className="text-xl font-bold">{displayValue}</h2>
     </div>
   );
 }
